@@ -15,6 +15,7 @@ single unrenamed export.
 Usage:
     python scripts/import_sensorlogger.py path/to/exports/*.zip
     python scripts/import_sensorlogger.py 2026-10-07_14-03-22.zip --gesture ring --person 2 --session 1
+    python scripts/import_sensorlogger.py exports/idle_p1_s2_01.zip --max-seconds 40
 """
 from __future__ import annotations
 
@@ -87,6 +88,8 @@ def main() -> None:
     ap.add_argument("--person", type=int, help="person number (1, 2, ...) for a single unrenamed export")
     ap.add_argument("--session", type=int, help="session number for a single unrenamed export")
     ap.add_argument("--overwrite", action="store_true", help="replace an existing raw file of the same name")
+    ap.add_argument("--max-seconds", type=float,
+                    help="keep only the first N seconds (used to trim over-long idle recordings)")
     args = ap.parse_args()
 
     manual = args.gesture is not None
@@ -106,6 +109,8 @@ def main() -> None:
             print(f"skip   {out.relative_to(RAW_DIR.parent.parent)} (exists; use --overwrite)")
             continue
         df = total_acceleration(_read_sensor_csvs(src))
+        if args.max_seconds:
+            df = df[df["t"] <= args.max_seconds]
         out.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(out, index=False)
         print(f"wrote  {out.relative_to(RAW_DIR.parent.parent)}  ({len(df)} rows, {df['t'].iloc[-1]:.1f} s)")

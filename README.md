@@ -1,167 +1,90 @@
-# Phone-accelerometer gesture dataset — "Magic Wand" style (Group 4)
+# Phone-accelerometer "Magic Wand" gesture dataset (Group 4)
 
-> **TODO before submitting:** every line marked `TODO` must be filled in
-> from `data/capture_log.csv` and `data/manifest.csv`, then delete this box.
+<!-- TODO: fill every TODO from data/capture_log.csv and data/manifest.csv. Keep this file under 7500 characters: the grader only reads the first 8000. -->
 
-## 1. What this dataset is for
+## 1. Purpose
 
-Training a small classifier that recognises **three wand gestures drawn in
-the air with a phone, plus an "idle" (no gesture) class**, in the style of
-TensorFlow Lite's Magic Wand example. The idle class exists so a detector
-can tell "no gesture is happening" apart from the three gestures, instead
-of always forcing one of them.
+Data for training a classifier that recognises **3 gestures drawn in the air with a phone, plus `idle`** (no gesture), in the style of TensorFlow Lite's Magic Wand example. `idle` lets a detector say "nothing is happening" instead of always picking a gesture.
 
-| Label (`gesture`) | Motion |
+| Label | Motion |
 |---|---|
-| `wing` | Draw a capital **W** in the air, left to right (~1–2 s) |
-| `ring` | Draw one **clockwise circle** (~1–2 s) |
-| `slope` | Draw an **L-like slope**: a diagonal stroke up-and-right, then straight down (~1–2 s) |
-| `idle` | **No gesture**: phone held still, phone resting on a table, holding the phone while talking or shifting position, and a few steps of walking |
+| `wing` | a capital **W**, left to right, ~1–2 s |
+| `ring` | one **clockwise circle**, ~1–2 s |
+| `slope` | a diagonal stroke **up-right, then straight down**, ~1–2 s |
+| `idle` | no gesture: held still, resting on a table, held while talking or shifting, a few steps of walking |
 
-Each gesture shows up in the trace as a burst of motion lasting about 1–2 s,
-separated from the next repetition by a pause of about 2 s. The three gestures
-differ in their pattern over time: `ring` produces two roughly sinusoidal
-axes 90° out of phase, `wing` alternates sharp left/right reversals four times,
-and `slope` is one diagonal push followed by one strong vertical one. `idle` stays
-close to gravity alone, with only small irregular motion.
+In a trace, each repetition is a ~1–2 s burst of motion between ~2 s pauses. `ring` shows two smooth axes out of phase, `wing` four sharp left/right reversals, and `slope` one diagonal push then one vertical push. `idle` stays near gravity alone.
 
-## 2. How it was captured
+## 2. Capture
 
-**Hardware / app**
-- Phones: TODO (e.g. p1 iPhone 14, iOS 18; p2 Pixel 7, Android 15 — the per-recording phone is in `data/capture_log.csv`)
-- App: [Sensor Logger](https://www.tszheichoi.com/sensorlogger) TODO version, with the **Accelerometer** and **Gravity** sensors enabled, all other sensors off, sampling rate set to **100 Hz**, export format CSV.
-- Sensor Logger's "Accelerometer" stream has gravity removed, so
-  `scripts/import_sensorlogger.py` adds its `Gravity` stream back in
-  (interpolated onto the accelerometer timestamps). The stored data is
-  therefore the **total acceleration including gravity**, like a raw
-  accelerometer chip and the Magic Wand example. If a given export was in g, it is converted to m/s².
+- **Phones:** TODO (per-recording model/OS in `data/capture_log.csv`).
+- **App:** [Sensor Logger](https://www.tszheichoi.com/sensorlogger) TODO version. **Accelerometer** and **Gravity** sensors on, everything else off, **100 Hz**, CSV export.
+- Sensor Logger's Accelerometer stream has gravity removed. `scripts/import_sensorlogger.py` adds its Gravity stream back in (interpolated onto the accelerometer timestamps), so the data is **total acceleration including gravity**, like a raw accelerometer chip. Exports in g are converted to m/s².
+- **Grip (every recording):** dominant hand (logged per person), screen facing the performer, top edge pointing away, held like a wand. Gestures drawn in the vertical plane at chest height.
 
-**Holding the phone (same for every recording)**
-Phone in the performer's dominant hand, screen facing the performer, top
-edge pointing away from the body, gripped like a wand. Gestures are drawn
-in the vertical plane in front of the body at about chest height. Which hand each person used is recorded in `data/capture_log.csv`.
+**One recording:** press record and hold still ~2 s. Perform the gesture **10 times** with ~2 s still between repetitions, varying speed on purpose (~3 slow, 4 normal, 3 fast). For `idle`, record ~35 s mixing the activities in §1. Then stop, export, rename to `<gesture>_p<person>_s<session>_<take>.zip`, and import it (§5).
 
-**Procedure for one recording**
-1. Press record in Sensor Logger and hold still for about 2 s.
-2. **Gesture classes:** perform the gesture **10 times**, holding still for
-   about 2 s between repetitions. Speed is varied on purpose within each
-   recording: about 3 slow, 4 normal and 3 fast repetitions.
-3. **Idle:** record for about 35 s, mixing holding still, resting the phone on a table,
-   holding it while talking or moving around in place, and walking a few steps.
-4. Stop the recording, export it as CSV (a .zip), and rename it
-   `<gesture>_p<person>_s<session>_<take>`.
-5. Convert it into the dataset with
-   `python scripts/import_sensorlogger.py exports/ring_p2_s1_01.zip`
-   (see §5 for setup). Then log the recording in `data/capture_log.csv`.
+**Who / how much:** TODO N people (`p1`…`pN`), each doing **2 sessions** on different days or times of day (dates in the capture log). Each session has **2 takes of each class**.
 
-**Who / how much**
-- People: TODO N group members, anonymised as `p1`…`pN`.
-- Sessions: each person recorded **2 sessions** on different days or at different times of day (dates are in `data/capture_log.csv`).
-- Per session, each person recorded **2 takes of each of the 4 classes** (2 × 10 repetitions per gesture, plus 2 × ~35 s of idle).
-- Totals: TODO — fill from `data/manifest.csv`, e.g. `python -c "import pandas as p; m=p.read_csv('data/manifest.csv'); print(m.groupby(['gesture','person']).n_windows.sum().unstack())"`
-
-| gesture | recordings | windows (examples) |
+| gesture | recordings | windows |
 |---|---:|---:|
 | wing | TODO | TODO |
 | ring | TODO | TODO |
 | slope | TODO | TODO |
 | idle | TODO | TODO |
 
-## 3. Organisation, format and labels
+## 3. Organisation, format, labels
 
 ```
-README.md
+data/raw/<gesture>/<gesture>_p<person>_s<session>_<take>.csv   the dataset, one file per recording
+data/manifest.csv      one row per raw file: label, person, session, take, samples, duration, rate, n_windows
+data/capture_log.csv   hand log: phone, hand, date, time of day, notes
+data/augmented/        generated by augment.py (not committed)
+scripts/               common.py (shared loader), import_sensorlogger.py, augment.py, train_demo.py
 requirements.txt
-data/
-  raw/<gesture>/<gesture>_p<person>_s<session>_<take>.csv   ← the dataset (one file per recording)
-  manifest.csv          one row per raw file: label, person, session, sample count, duration, window count
-  capture_log.csv       hand-written log: phone, hand, date, time of day, notes on mistakes
-  augmented/            NOT committed — generated by scripts/augment.py
-scripts/
-  common.py             shared loading / resampling / segmentation (used by every script)
-  import_sensorlogger.py  Sensor Logger export → data/raw CSV
-  augment.py            data augmentation
-  train_demo.py         training + evaluation demo
-tools/build_bundle.py   course self-check tool (unchanged)
 ```
 
-**Raw CSV schema.** Every file in `data/raw/` has exactly this header and no other columns:
+**Every raw CSV** has exactly the header `t,ax,ay,az`. `t` is seconds since the recording started, and `ax ay az` are total acceleration in m/s² in the phone's axes: x to the screen's right, y to its top, z out of the screen. With the grip above, gravity is mostly on `ay`. Phone timestamps are only *nearly* 100 Hz, so the loader resamples each file to exactly 100 Hz with linear interpolation.
 
-| column | meaning | unit |
-|---|---|---|
-| `t` | time since the start of the recording | seconds |
-| `ax`, `ay`, `az` | total acceleration including gravity, in the phone's own axes | m/s² |
+**Label = the folder name**, which always equals the first part of the file name (`data/raw/ring/ring_p2_s1_03.csv` → `ring`, person `p2`, session 1, take 3). The loader stops with an error if they ever disagree. Every row in a file has that file's label.
 
-The phone's axes follow the standard phone convention: **x** points to the right of the screen, **y** to the top of the
-screen, and **z** out of the screen toward the user. Held as described above, gravity mostly
-shows up on `ay`. Timestamps come straight from the phone, so they are
-*nearly* but not exactly 100 Hz; the loader resamples every file onto an exact
-100 Hz grid with linear interpolation (`scripts/common.py: resample`).
-
-**Deriving a label.** The label of a file is its **folder name**, which is always
-the same as the first part of its file name (`data/raw/ring/ring_p2_s1_03.csv` → `ring`). The
-loader refuses to run if the two ever disagree. The file name also gives the
-performer (`p2`), session (`s1`) and take (`03`). Every row in a file has
-that file's label. `data/manifest.csv` lists the same information in table form.
-
-**From recordings to training examples.** Each gesture recording contains about 10
-repetitions, so the scripts cut it into one **3 s window per repetition**.
-The slow gravity/orientation part (a 2 s running mean) is subtracted, and any burst where the remaining
-motion is above max(1 m/s², 25 % of the recording's 99th-percentile
-motion) counts as a repetition. Bursts less than 0.6 s apart are merged and bursts shorter than 0.3 s are
-dropped. Idle recordings are cut into back-to-back 3 s windows. The
-`n_windows` column of the manifest shows how many examples each file produced. A
-gesture file whose count is far from its repetition count is listed under Known limitations.
+**Training examples:** `scripts/common.py` cuts each gesture recording into one **3 s window per repetition**. It subtracts a 2 s running mean (gravity/orientation), and treats any burst above max(1 m/s², 25 % of the file's 99th-percentile motion) as a repetition. Bursts under 0.6 s apart are merged and bursts shorter than 0.3 s dropped. Idle files are cut into back-to-back 3 s windows. `n_windows` in the manifest is how many examples each file produced, so it should be about 10 for gesture files.
 
 ## 4. Known limitations
 
-- TODO: list any recording whose `n_windows` doesn't match its repetitions,
-  and any mistakes noted in the capture log (e.g. "ring_p3_s2_02: rep 7 was
-  aborted, kept; it produced 11 windows").
-- Only N people (TODO), all students of a similar age, each with their own phone model;
-  differences between phones are mixed in with differences between people.
-- A single grip and orientation (§2). The augmentation adds ±15° rotations, but
-  a very different grip (e.g. phone held sideways) is not represented.
-- Idle covers only the activities listed in §1, not every possible incidental motion
-  (e.g. running, or the phone in a pocket).
-- Gesture boundaries come from the automatic segmentation, not hand labels. A
-  window may include a little of the pause before or after a repetition.
+- TODO: any file whose `n_windows` ≠ its repetitions, and any mistakes from the capture log (e.g. "ring_p3_s2_02: rep 7 aborted, kept, gives 11 windows").
+- TODO N people of similar age, each with their own phone, so phone and person differences are mixed together.
+- One grip/orientation. Augmentation adds ±15° rotations, but e.g. a sideways grip is not covered.
+- `idle` covers only the activities in §1 (no running, no phone in a pocket).
+- Repetition boundaries come from automatic segmentation, not hand labels, so a window may include a little pause.
 
 ## 5. Running the scripts
 
-Requires Python 3.10+. From the repository root:
+Python 3.10+, from the repo root:
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-**Augmentation** writes `data/augmented/<gesture>/*.csv` (same schema as raw)
-plus `data/augmented/manifest.csv`, which records every parameter used:
+**Import a new recording** (also rebuilds `data/manifest.csv`):
+`python scripts/import_sensorlogger.py exports/ring_p2_s1_01.zip`
+
+**Augment** (writes `data/augmented/<gesture>/*.csv` with the raw schema, plus `data/augmented/manifest.csv` listing every parameter used):
 
 ```bash
-python scripts/augment.py                    # 5 copies per window, seed 0
+python scripts/augment.py                     # 5 copies per window, seed 0
 python scripts/augment.py --copies 10 --seed 1
 ```
 
-Each copy combines a random small 3-D rotation (±15° per axis, a different grip angle), magnitude
-scaling ×0.8–1.2 of the motion only (gravity is left alone), time warping ×0.85–1.15 (a slower or faster
-gesture), a time shift of ±0.25 s (imperfect segmentation) and Gaussian jitter (σ 0.05–0.20 m/s²).
+Each copy combines a 3-D rotation of up to ±15° per axis (grip angle), scaling ×0.8–1.2 of the motion but not gravity (strength), a time warp of ×0.85–1.15 (speed), a time shift of up to ±0.25 s (segmentation error), and Gaussian jitter with σ 0.05–0.2 m/s² (sensor noise).
 
-**Training demo** trains a random forest on hand-crafted window features
-(per-axis statistics plus a 10 Hz downsampled trace), using raw plus augmented data:
+**Train / evaluate:**
 
 ```bash
-python scripts/train_demo.py                 # uses data/augmented if it exists
-python scripts/train_demo.py --no-augmented  # raw data only
+python scripts/train_demo.py                  # raw + augmented (if generated)
+python scripts/train_demo.py --no-augmented   # raw only
 ```
 
-The demo evaluates with **leave-one-person-out** cross-validation, so it is always
-tested on someone it never trained on. Augmented windows are used only for training, and only those made from the
-training people's own recordings, so nothing from the test person leaks in.
-It prints per-fold accuracy, a classification report and a confusion matrix, then saves a final
-model to `models/gesture_rf.joblib`.
-
-**Adding new recordings:** see step 5 in §2. `import_sensorlogger.py` rebuilds
-`data/manifest.csv` automatically.
+A random forest is trained on per-axis statistics plus a 10 Hz downsampled trace of each window. It is evaluated with **leave-one-person-out** cross-validation, so it is always tested on someone it never saw. Augmented windows are used for training only, and only those made from the training fold's own recordings, so nothing leaks from the test fold. The script prints per-fold accuracy, a classification report and a confusion matrix, then saves the final model to `models/gesture_rf.joblib`.

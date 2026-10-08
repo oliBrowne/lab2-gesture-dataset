@@ -23,6 +23,8 @@ GESTURE_CLASSES = [c for c in CLASSES if c != "idle"]
 FS = 100            # Hz: every recording is resampled to this rate on load
 WINDOW_S = 3.0      # seconds per training example
 WINDOW = int(FS * WINDOW_S)
+REPS_PER_RECORDING = 10   # every gesture recording was captured as 10 repetitions
+MERGE_GAPS_S = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
 IDLE_STRIDE = WINDOW  # idle recordings are cut into back-to-back, non-overlapping windows
 
 COLUMNS = ["t", "ax", "ay", "az"]
@@ -93,31 +95,37 @@ def motion_energy(sig: np.ndarray, fs: int = FS) -> np.ndarray:
     return _moving_average(np.linalg.norm(dynamic, axis=1), int(0.1 * fs))
 
 
-def find_gesture_regions(sig: np.ndarray, fs: int = FS) -> list[tuple[int, int]]:
-    """Return (start, end) sample indices of each burst of motion.
+def _bursts(active: np.ndarray) -> list[list[int]]:
+    edges = np.flatnonzero(np.diff(np.r_[0, active.astype(int), 0]))
+    return [list(r) for r in edges.reshape(-1, 2)]
 
-    Recordings are captured as ~10 repetitions separated by ~2 s pauses, so
-    each burst above the threshold is one repetition.
+
+def find_gesture_regions(sig: np.ndarray, fs: int = FS, expected: int = REPS_PER_RECORDING) -> list[tuple[int, int]]:
+    """Return (start, end) sample indices of each repetition in a recording.
+
+    A burst of motion above the threshold is one repetition. Some gestures
+    (slope's corner, wing's reversals) briefly slow down mid-gesture, so
+    bursts closer together than a merge gap are joined. Pauses between
+    repetitions varied between recordings, so the merge gap is chosen per
+    recording: the smallest gap in MERGE_GAPS_S whose repetition count is
+    closest to `expected`.
     """
     energy = motion_energy(sig, fs)
     threshold = max(1.0, 0.25 * np.percentile(energy, 99))  # m/s^2
-    active = energy > threshold
+    bursts = _bursts(energy > threshold)
 
-    regions, start = [], None
-    for i, a in enumerate(np.append(active, False)):
-        if a and start is None:
-            start = i
-        elif not a and start is not None:
-            regions.append([start, i])
-            start = None
-
-    merged: list[list[int]] = []
-    for r in regions:  # join bursts split by a brief slowdown mid-gesture
-        if merged and r[0] - merged[-1][1] < int(0.6 * fs):
-            merged[-1][1] = r[1]
-        else:
-            merged.append(r)
-    return [(s, e) for s, e in merged if e - s >= int(0.3 * fs)]
+    best = None
+    for gap_s in MERGE_GAPS_S:
+        merged: list[list[int]] = []
+        for b in bursts:
+            if merged and b[0] - merged[-1][1] < int(gap_s * fs):
+                merged[-1][1] = b[1]
+            else:
+                merged.append(list(b))
+        regions = [(s, e) for s, e in merged if e - s >= int(0.3 * fs)]
+        if best is None or abs(len(regions) - expected) < abs(len(best) - expected):
+            best = regions
+    return best
 
 
 def _centered_window(sig: np.ndarray, center: int, length: int = WINDOW) -> np.ndarray:

@@ -1,0 +1,17 @@
+file,gesture,person,session,take,n_samples,duration_s,mean_rate_hz,n_windows
+data/raw/idle/idle_p1_s1_01.csv,idle,p1,1,1,3802,38.16,99.6,12
+data/raw/idle/idle_p1_s1_02.csv,idle,p1,1,2,3631,36.45,99.6,12
+data/raw/idle/idle_p1_s2_01.csv,idle,p1,2,1,3985,39.99,99.6,13
+data/raw/idle/idle_p1_s2_02.csv,idle,p1,2,2,3985,39.99,99.6,13
+data/raw/ring/ring_p1_s1_01.csv,ring,p1,1,1,3330,33.42,99.6,10
+data/raw/ring/ring_p1_s1_02.csv,ring,p1,1,2,3181,31.93,99.6,10
+data/raw/ring/ring_p1_s2_01.csv,ring,p1,2,1,3936,39.5,99.6,11
+data/raw/ring/ring_p1_s2_02.csv,ring,p1,2,2,3631,36.44,99.6,10
+data/raw/slope/slope_p1_s1_01.csv,slope,p1,1,1,5325,53.45,99.6,10
+data/raw/slope/slope_p1_s1_02.csv,slope,p1,1,2,4430,44.46,99.6,10
+data/raw/slope/slope_p1_s2_01.csv,slope,p1,2,1,5070,50.89,99.6,9
+data/raw/slope/slope_p1_s2_02.csv,slope,p1,2,2,4588,46.05,99.6,10
+data/raw/wing/wing_p1_s1_01.csv,wing,p1,1,1,6111,61.35,99.6,10
+data/raw/wing/wing_p1_s1_02.csv,wing,p1,1,2,5465,54.86,99.6,10
+data/raw/wing/wing_p1_s2_01.csv,wing,p1,2,1,5024,50.42,99.6,10
+data/raw/wing/wing_p1_s2_02.csv,wing,p1,2,2,6421,64.44,99.6,10
