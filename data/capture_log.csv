@@ -1,17 +1,17 @@
 file,person,hand,phone_model,os,date,time_of_day,session,gesture,reps,notes
-data/raw/idle/idle_p1_s1_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,18:32,1,idle,,home
-data/raw/idle/idle_p1_s1_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,18:37,1,idle,,home
-data/raw/idle/idle_p1_s2_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,23:54,2,idle,,"gym; 212 s, trim to ~40 s"
-data/raw/idle/idle_p1_s2_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,23:58,2,idle,,"gym; 151 s, trim to ~40 s"
-data/raw/ring/ring_p1_s1_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,18:30,1,ring,10,home standing
-data/raw/ring/ring_p1_s1_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,18:35,1,ring,10,home standing
-data/raw/ring/ring_p1_s2_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,23:48,2,ring,10,gym
-data/raw/ring/ring_p1_s2_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,23:49,2,ring,10,gym
-data/raw/slope/slope_p1_s1_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,18:31,1,slope,10,home standing; short pauses
-data/raw/slope/slope_p1_s1_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,19:32,1,slope,10,redo 19:32; ~1s pauses
-data/raw/slope/slope_p1_s2_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,23:53,2,slope,10,gym; short pauses
-data/raw/slope/slope_p1_s2_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-08,00:09,2,slope,10,gym; short pauses
-data/raw/wing/wing_p1_s1_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,18:28,1,wing,10,"home, standing; phone tilted ~40deg this take"
-data/raw/wing/wing_p1_s1_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,18:34,1,wing,10,home standing
-data/raw/wing/wing_p1_s2_01.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-07,21:56,2,wing,10,"gym, standing, between sets"
-data/raw/wing/wing_p1_s2_02.csv,p1,TODO,iPhone19-2,iOS 27.0.1,2026-10-08,00:10,2,wing,10,gym; confirmed wing by user
+data/raw/idle/idle_p1_s1_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,18:32,1,idle,,home
+data/raw/idle/idle_p1_s1_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,18:37,1,idle,,home
+data/raw/idle/idle_p1_s2_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,23:54,2,idle,,"gym; 212 s, trim to ~40 s"
+data/raw/idle/idle_p1_s2_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,23:58,2,idle,,"gym; 151 s, trim to ~40 s"
+data/raw/ring/ring_p1_s1_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,18:30,1,ring,10,home standing
+data/raw/ring/ring_p1_s1_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,18:35,1,ring,10,home standing
+data/raw/ring/ring_p1_s2_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,23:48,2,ring,10,gym
+data/raw/ring/ring_p1_s2_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,23:49,2,ring,10,gym
+data/raw/slope/slope_p1_s1_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,18:31,1,slope,10,home standing; short pauses
+data/raw/slope/slope_p1_s1_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,19:32,1,slope,10,redo 19:32; ~1s pauses
+data/raw/slope/slope_p1_s2_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,23:53,2,slope,10,gym; short pauses
+data/raw/slope/slope_p1_s2_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-08,00:09,2,slope,10,gym; short pauses
+data/raw/wing/wing_p1_s1_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,18:28,1,wing,10,"home, standing; phone tilted ~40deg this take"
+data/raw/wing/wing_p1_s1_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,18:34,1,wing,10,home standing
+data/raw/wing/wing_p1_s2_01.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-07,21:56,2,wing,10,"gym, standing, between sets"
+data/raw/wing/wing_p1_s2_02.csv,p1,right,iPhone19-2,iOS 27.0.1,2026-10-08,00:10,2,wing,10,gym; confirmed wing by user
